@@ -1,0 +1,104 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import YandexMetrika from '../components/YandexMetrika.astro';
+import { site } from '../config/site';
+
+type JsonLd = Record<string, unknown>;
+
+interface Props {
+  /** <title> и og:title. Название бренда добавляется автоматически. */
+  title: string;
+  /** meta description и og:description. */
+  description: string;
+  /** Путь к OG-картинке в public/ или абсолютный URL. */
+  ogImage?: string;
+  /** Закрыть страницу от индексации. */
+  noindex?: boolean;
+  /** og:type: website для обычных страниц, article для статей и кейсов. */
+  ogType?: 'website' | 'article';
+  /** Структурированные данные schema.org — один объект или несколько. */
+  jsonLd?: JsonLd | JsonLd[];
+}
+
+const {
+  title,
+  description,
+  ogImage = site.defaultOgImage,
+  noindex = false,
+  ogType = 'website',
+  jsonLd,
+} = Astro.props;
+
+const fullTitle = title.includes(site.name) ? title : `${title} — ${site.name}`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage, Astro.site);
+const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+
+// Экранируем «<», чтобы содержимое не могло закрыть тег <script>.
+const serializeJsonLd = (data: JsonLd) => JSON.stringify(data).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <meta name="generator" content={Astro.generator} />
+
+    {
+      jsonLdItems.map((item) => (
+        <script is:inline type="application/ld+json" set:html={serializeJsonLd(item)} />
+      ))
+    }
+
+    <YandexMetrika />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Перейти к содержанию</a>
+    <SiteHeader />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-2);
+    z-index: 100;
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-signal);
+    color: var(--color-signal-ink);
+    font-weight: 600;
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus {
+    transform: none;
+  }
+
+  main:focus {
+    outline: none;
+  }
+</style>

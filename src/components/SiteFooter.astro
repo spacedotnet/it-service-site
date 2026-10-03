@@ -1,0 +1,93 @@
+---
+import { site } from '../config/site';
+
+const social = site.social.filter((item) => item.href);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer section--night">
+  <div class="container site-footer__inner">
+    <div>
+      <p class="site-footer__name">{site.name}</p>
+      <p class="site-footer__muted">{site.tagline}</p>
+    </div>
+
+    <address class="site-footer__contacts">
+      <a href={`tel:${site.contacts.phoneHref}`}>{site.contacts.phone}</a>
+      <a href={`mailto:${site.contacts.email}`}>{site.contacts.email}</a>
+      <span>{site.contacts.address.city}, {site.contacts.address.street}</span>
+      <span class="site-footer__muted">{site.contacts.openingHoursText}</span>
+    </address>
+
+    {
+      social.length > 0 && (
+        <ul class="site-footer__social" aria-label="Мессенджеры и соцсети">
+          {social.map((item) => (
+            <li>
+              <a href={item.href} rel="noopener">
+                {item.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <div class="site-footer__legal site-footer__muted">
+      <p>
+        © {year} {site.legal.companyName}. ИНН {site.legal.inn}, ОГРН {site.legal.ogrn}
+      </p>
+      <p><a href={site.privacyPolicyHref}>Политика обработки персональных данных</a></p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--space-12);
+    font-size: var(--text-sm);
+  }
+
+  .site-footer__inner {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .site-footer__name {
+    margin-bottom: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+
+  .site-footer__muted {
+    color: var(--color-night-muted);
+  }
+
+  .site-footer__contacts {
+    display: grid;
+    gap: var(--space-2);
+    font-style: normal;
+  }
+
+  .site-footer__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__legal {
+    grid-column: 1 / -1;
+    padding-top: var(--space-6);
+    border-top: var(--border-width) solid #3a3e47;
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__inner {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+  }
+</style>
