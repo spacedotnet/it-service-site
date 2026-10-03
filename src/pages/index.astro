@@ -1,0 +1,227 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import { site } from '../config/site';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+
+const title = 'ИТ-обслуживание бизнеса в Санкт-Петербурге';
+const description =
+  'Берём на себя ИТ малого и среднего бизнеса под ключ: обслуживание офиса, серверы, облака, защита данных и 1С. Понятные сроки, цены и ответственность.';
+
+const localBusiness = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: site.name,
+  description: site.tagline,
+  url: Astro.site?.href,
+  image: new URL(site.defaultOgImage, Astro.site).href,
+  telephone: site.contacts.phone,
+  email: site.contacts.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.contacts.address.street,
+    addressLocality: site.contacts.address.city,
+    addressRegion: site.contacts.address.region,
+    postalCode: site.contacts.address.postalCode,
+    addressCountry: site.contacts.address.country,
+  },
+  areaServed: site.contacts.address.city,
+  openingHours: site.contacts.openingHours,
+};
+
+const steps = [
+  { label: '01', title: 'Аудит', text: 'TODO: что проверяем и что клиент получает на выходе.' },
+  { label: '02', title: 'Договор и план', text: 'TODO: фиксируем объём работ, сроки реакции и цену.' },
+  { label: '03', title: 'Подключение', text: 'TODO: как принимаем инфраструктуру на обслуживание.' },
+  { label: '04', title: 'Обслуживание и отчёт', text: 'TODO: регулярные работы и ежемесячный отчёт.' },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={localBusiness}>
+  <section class="hero section" aria-labelledby="hero-title">
+    <div class="container">
+      <div class="hero__inner">
+        <p class="eyebrow">// ИТ-аутсорсинг · Санкт-Петербург</p>
+        <h1 id="hero-title">{site.slogan}</h1>
+        <p class="hero__lead">
+          Мы — команда инженеров, которая берёт на себя компьютеры, серверы, сеть, облака, защиту данных
+          и 1С вашей компании. Вы занимаетесь бизнесом, а не поломками.
+        </p>
+        <div class="hero__actions">
+          <a class="button button--primary" href={`tel:${site.contacts.phoneHref}`}>
+            Позвонить: {site.contacts.phone}
+          </a>
+          <a class="button button--ghost" href="/contacts/">Написать нам</a>
+        </div>
+        <p class="hero__status" aria-hidden="true">
+          <span class="hero__dot"></span> status: всё работает
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="services-title">
+    <div class="container">
+      <p class="eyebrow">// услуги</p>
+      <h2 id="services-title">Что мы берём на себя</h2>
+      <ul class="grid" role="list">
+        {
+          services.map((service) => (
+            <li>
+              <ServiceCard service={service} />
+            </li>
+          ))
+        }
+      </ul>
+      <p class="todo">TODO: добавить остальные услуги — серверы, облака, кибербезопасность, 1С, автоматизация, аудит.</p>
+    </div>
+  </section>
+
+  <section class="section section--night" aria-labelledby="process-title">
+    <div class="container">
+      <p class="eyebrow">// как работаем</p>
+      <h2 id="process-title">Как мы начинаем работу</h2>
+      <ol class="steps" role="list">
+        {
+          steps.map((step) => (
+            <li class="steps__item">
+              <span class="steps__label" aria-hidden="true">{step.label}</span>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="pricing-title">
+    <div class="container">
+      <p class="eyebrow">// тарифы</p>
+      <h2 id="pricing-title">Сколько стоит</h2>
+      <p class="todo">TODO: блок тарифов с ценами «от» и составом обслуживания.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="cases-title">
+    <div class="container">
+      <p class="eyebrow">// кейсы</p>
+      <h2 id="cases-title">Что мы уже сделали</h2>
+      <p class="todo">TODO: реальные кейсы клиентов. Не публиковать выдуманные.</p>
+    </div>
+  </section>
+
+  <section class="section cta" aria-labelledby="cta-title">
+    <div class="container">
+      <div class="cta__inner">
+        <h2 id="cta-title">Расскажите, что болит в ИТ — предложим решение</h2>
+        <p>Позвоните или напишите нам. Форма заявки появится на следующем этапе.</p>
+        <div class="hero__actions">
+          <a class="button button--primary" href={`tel:${site.contacts.phoneHref}`}>
+            {site.contacts.phone}
+          </a>
+          <a class="button button--ghost" href={`mailto:${site.contacts.email}`}>
+            {site.contacts.email}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero__inner {
+    max-width: 52rem;
+  }
+
+  .hero__lead {
+    max-width: 40rem;
+    font-size: var(--text-lg);
+    color: var(--color-ink-muted);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+
+  .hero__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-8);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+  }
+
+  .hero__dot {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 4px var(--color-signal);
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0 0 var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .steps {
+    display: grid;
+    gap: var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 48rem) {
+    .steps {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .steps__item {
+    padding-top: var(--space-4);
+    border-top: 2px solid var(--color-signal);
+  }
+
+  .steps__item p {
+    color: var(--color-night-muted);
+  }
+
+  .steps__label {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-family: var(--font-mono);
+    color: var(--color-signal);
+  }
+
+  .cta {
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  .cta__inner {
+    max-width: 48rem;
+  }
+</style>

@@ -1,0 +1,72 @@
+/*
+ * Дизайн-токены.
+ * Характер: «уверенные гики» — спокойная тёплая бумага + графит,
+ * сигнальный лаймовый акцент как индикатор «всё работает».
+ * Контраст пар текст/фон проверен на WCAG 2.1 AA (≥ 4.5:1 для текста).
+ */
+:root {
+  /* Цвета: база */
+  --color-paper: #f4f2ec;        /* фон страницы */
+  --color-paper-raised: #fbfaf6; /* карточки */
+  --color-ink: #16181d;          /* основной текст, 15.9:1 на paper */
+  --color-ink-muted: #4a4f5a;    /* второстепенный текст, 7.3:1 на paper */
+  --color-line: #d8d4c8;         /* разделители, рамки (декоративные) */
+
+  /* Цвета: акцент */
+  --color-signal: #c8f04a;       /* лайм — только фон под тёмным текстом */
+  --color-signal-ink: #16181d;   /* текст на signal, 13.5:1 */
+  --color-accent: #3a6600;       /* акцентный текст/ссылки, 6.1:1 на paper */
+  --color-accent-hover: #2b4d00;
+
+  /* Тёмные секции */
+  --color-night: #16181d;
+  --color-night-text: #f4f2ec;   /* 15.9:1 на night */
+  --color-night-muted: #b5b9c2;  /* 9.0:1 на night */
+
+  /* Фокус — хорошо виден и на светлом, и на тёмном фоне */
+  --focus-ring: 0 0 0 3px var(--color-paper), 0 0 0 6px var(--color-accent);
+
+  /* Шрифты. TODO: подключить локальные шрифты из public/fonts (никаких внешних CDN). */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  /* Типографическая шкала (mobile-first, растёт с шириной экрана) */
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+  --text-3xl: clamp(2rem, 1.4rem + 3vw, 3.75rem);
+  --leading-tight: 1.15;
+  --leading-normal: 1.6;
+
+  /* Отступы */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-section: clamp(3rem, 2rem + 5vw, 6rem);
+
+  /* Сетка */
+  --container: 72rem;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2rem);
+
+  /* Формы */
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --border-width: 1px;
+
+  /* Движение */
+  --duration-fast: 150ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+  }
+}

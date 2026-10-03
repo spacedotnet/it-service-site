@@ -1,0 +1,59 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  service: CollectionEntry<'services'>;
+}
+
+const { service } = Astro.props;
+const { title, h1, description, priceFrom } = service.data;
+const price = new Intl.NumberFormat('ru-RU').format(priceFrom);
+---
+
+<article class="service-card">
+  <h3 class="service-card__title">
+    <a href={`/services/${service.id}/`}>{h1 ?? title}</a>
+  </h3>
+  <p class="service-card__text">{description}</p>
+  <p class="service-card__price">от {price} ₽</p>
+</article>
+
+<style>
+  .service-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--space-6);
+    background: var(--color-paper-raised);
+    border: var(--border-width) solid var(--color-line);
+    border-radius: var(--radius-md);
+  }
+
+  .service-card:focus-within,
+  .service-card:hover {
+    border-color: var(--color-ink);
+  }
+
+  .service-card__title a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  /* Вся карточка кликабельна, ссылка остаётся одна */
+  .service-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .service-card__text {
+    color: var(--color-ink-muted);
+  }
+
+  .service-card__price {
+    margin: auto 0 0;
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+</style>
